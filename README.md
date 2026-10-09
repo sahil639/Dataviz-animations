@@ -6,6 +6,7 @@ Static HTML animation prototypes. Every page is self-contained (fonts, images an
 | --- | --- |
 | `/groww-recap-seq1/` | Groww monthly recap, Sequence 1: 11 dial-style story cards. Each card runs 10s (3s entrance, 5s hold, 2s transition). Autoplay by default; tapping, swiping or the arrow keys switch to manual control. Hold or press Space to pause. |
 | `/september-recap-v2/` | September Recap v2: 11 screens with a new motion design for each, using the same 10s timing, autoplay and manual control. |
+| `/data-recap-sequence-3/` | Data Recap Sequence 3: 10 cards based on Sequence 2, set in Söhne. Card 06 has a 0–100% control (left of the phone) that drives the holdings-growth graph. |
 
 ## Deploy
 
