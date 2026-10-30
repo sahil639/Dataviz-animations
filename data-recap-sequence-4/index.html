@@ -2015,9 +2015,9 @@ B.s06=()=>{fit($('w6-title-t'),R('s06.titleText'),{x:205.5,y:189.5,size:22,min:1
   window.W6.target=Math.max(0,Math.min(100,+R('s06.growthPercent')||0))};
 
 B.s07=()=>{fit($('w7-title-t'),`${R('s07.investmentMonth')} saw FII investments of`,{x:205.5,y:190,size:22,min:15,maxW:360,anchor:MID,weight:500});
-  /* −2.5% tracking on the figure only ("$3.1"); the unit after it ("billion") keeps normal spacing */
+  /* +2.5% tracking on the figure only ("$3.1"); the unit after it ("billion") keeps normal spacing */
   {const a=String(R('s07.investmentAmount')??''),m=a.match(/^(\S*\d[\d.,]*)(.*)$/);
-  fit($('w7-met'),m?`[[${m[1]}]]${m[2]}`:a,{x:205.5,y:264,size:60,min:30,maxW:370,anchor:MID,weight:500,ls:0,hiLs:-1.5})}
+  fit($('w7-met'),m?`[[${m[1]}]]${m[2]}`:a,{x:205.5,y:264,size:60,min:30,maxW:370,anchor:MID,weight:500,ls:0,hiLs:1.5})}
   fit($('w7-cap'),R('s07.commentaryText'),{x:205.5,y:306,size:15,min:12,maxW:330,maxLines:2,lh:1.3,anchor:MID,weight:500})};
 
 /* bubbles: biggest move gets the biggest bubble, whatever order the variables come in */
