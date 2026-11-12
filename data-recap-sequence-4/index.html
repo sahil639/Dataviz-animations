@@ -2000,7 +2000,7 @@ init(){const art=$('x15-art');art.innerHTML='';
 bind(){const s=R('s16');
   fit($('x15-title-t'),s.titleText,{x:205.5,y:201,size:24,min:18,maxW:300,maxLines:2,lh:1.35,anchor:'middle',weight:500});
   peaks.forEach((pk,k)=>{const st=s.stocks[k]||{};pk.img.setAttribute('href',st.stockImage||'');
-    W52(pk.row,pk.name,st,pk.c,'high')})},
+    W52(pk.row,pk.name,st,pk.c,'high',[pk.x,pk.y])})},
 render(t){
   H.rise($('x15-title'),t,0,900,14);
   [...$('x15-grid').children].forEach((l,k)=>{const q=H.eo(p(t,80+k*55,800));tr(l,{sy:Math.max(.001,q),ox:0,oy:478});op(l,q)});
@@ -2102,17 +2102,21 @@ B.s01=()=>{const m=R('s01.monthName');
   fit($('w1-asof'),`Data till ${R('s01.dataAsOf')}`,{x:29,y:753,size:14,min:11,maxW:352,weight:500});
   window.DIAL1&&DIAL1.setMonth(FMT.monthIndex(m),dialNames(FMT.monthIndex(m),+R('s01.year')||2026))};
 
-/* 52W rows, v2 layout: name (1 line, so each row stays the height of its logo) above the LTP and the date the stock touched its 52W low/high */
-window.W52=(parent,nameEl,st,c,word)=>{parent.querySelectorAll('.w52x').forEach(e=>e.remove());
+/* 52W rows, v2 layout: name (1 line) and LTP in the row; the date the stock touched its 52W low/high sits by its point on the graph.
+   pt = [x, y] of that stock's point; low dates hang below the trough, high dates sit just above the peak on its leader, on a small dark tag */
+window.W52=(parent,nameEl,st,c,word,pt)=>{parent.querySelectorAll('.w52x').forEach(e=>e.remove());
   const det=(recap.get(word==='low'?'s02.layout':'s16.layout'))==='details';
   if(!det){fit(nameEl,st.stockName||'',{x:93,y:c,size:15,min:11,maxW:118,maxLines:2,lh:1.2,weight:500,valign:'center'});return}
-  fit(nameEl,st.stockName||'',{x:93,y:c-11,size:15,maxW:122,maxLines:1,weight:500});
-  const ltp=H.mk('text',{class:'w52x num',fill:'#F3F5FF'},parent),dt=H.mk('text',{class:'w52x',fill:'#8A8FB0'},parent);
-  const v=+st.ltp;fit(ltp,isFinite(v)&&st.ltp!==''?`LTP [[${FMT.inr(v,2)}]]`:'',{x:93,y:c+6,size:13,maxW:125,weight:500,hi:'#F3F5FF'});
+  fit(nameEl,st.stockName||'',{x:93,y:c-4,size:15,maxW:122,maxLines:1,weight:500});
+  const ltp=H.mk('text',{class:'w52x num',fill:'#F3F5FF'},parent),v=+st.ltp;
+  fit(ltp,isFinite(v)&&st.ltp!==''?`LTP [[${FMT.inr(v,2)}]]`:'',{x:93,y:c+15,size:13,maxW:125,weight:500,hi:'#F3F5FF'});
   ltp.querySelectorAll('tspan').forEach(t=>{if(!t.getAttribute('fill'))t.setAttribute('fill','#8A8FB0')});
-  fit(dt,st.hitDate?`52W ${word} on ${st.hitDate}`:'',{x:93,y:c+22,size:12,maxW:125})};
+  if(!st.hitDate||!pt)return;
+  const g=H.mk('g',{class:'w52x'},parent),w=FIT.width(st.hitDate,{size:12,weight:500})+12,x=Math.min(405-w/2,Math.max(6+w/2,pt[0])),y=pt[1]+(word==='low'?14:-36);
+  H.mk('rect',{x:x-w/2,y,width:w,height:19,rx:5,fill:'#0B0C18','fill-opacity':.9,stroke:'#FFFFFF','stroke-opacity':.12},g);
+  const tx=H.mk('text',{class:'w52x',fill:'#D3D6EC'},g);fit(tx,st.hitDate,{x,y:y+13.5,size:12,maxW:80,anchor:'middle',weight:500})};
 B.s02=()=>{fit($('w2-title-t'),R('s02.titleText'),{x:205.5,y:201,size:24,min:18,maxW:300,maxLines:2,lh:1.35,anchor:MID,weight:500});
-  [313,381,449].forEach((c,k)=>{W52($('w2-row'+k),$('w2-name'+k),R(`s02.stocks.${k}`)||{},c,'low');
+  [313,381,449].forEach((c,k)=>{W52($('w2-row'+k),$('w2-name'+k),R(`s02.stocks.${k}`)||{},c,'low',[[277.5,664],[325.5,678.5],[373.5,699.5]][k]);
     img('w2-logo'+k,R(`s02.stocks.${k}.stockImage`))})};
 
 B.s03=()=>{fit($('w3-title-t'),`Dividend earned in ${R('s03.dividendMonth')}`,{x:205.5,y:195,size:24,min:15,maxW:350,anchor:MID,weight:500});
